@@ -3,19 +3,26 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C9739E7A397A9ECC00B2F5C2 /* Pods_webrtc_ios_sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3DC35C682803A6360366884 /* Pods_webrtc_ios_sample.framework */; };
 		E730E42A24CF8C5700EBF59C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E730E42924CF8C5700EBF59C /* AppDelegate.swift */; };
 		E730E42C24CF8C5700EBF59C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E730E42B24CF8C5700EBF59C /* SceneDelegate.swift */; };
 		E730E42E24CF8C5700EBF59C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E730E42D24CF8C5700EBF59C /* ViewController.swift */; };
 		E730E43124CF8C5700EBF59C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E730E42F24CF8C5700EBF59C /* Main.storyboard */; };
 		E730E43324CF8C5900EBF59C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E730E43224CF8C5900EBF59C /* Assets.xcassets */; };
 		E730E43624CF8C5900EBF59C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E730E43424CF8C5900EBF59C /* LaunchScreen.storyboard */; };
+		E730E43F24CF94B300EBF59C /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = E730E43E24CF94B300EBF59C /* SwiftyJSON */; };
+		E730E44124CF94C700EBF59C /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E730E44024CF94C700EBF59C /* SocketManager.swift */; };
+		E730E44324CF94D400EBF59C /* PeerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E730E44224CF94D400EBF59C /* PeerManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		686DFD00B351E9186196EEC4 /* Pods-webrtc_ios_sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-webrtc_ios_sample.release.xcconfig"; path = "Target Support Files/Pods-webrtc_ios_sample/Pods-webrtc_ios_sample.release.xcconfig"; sourceTree = "<group>"; };
+		DF23991536DFB765E9851435 /* Pods-webrtc_ios_sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-webrtc_ios_sample.debug.xcconfig"; path = "Target Support Files/Pods-webrtc_ios_sample/Pods-webrtc_ios_sample.debug.xcconfig"; sourceTree = "<group>"; };
+		E3DC35C682803A6360366884 /* Pods_webrtc_ios_sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_webrtc_ios_sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E730E42624CF8C5700EBF59C /* webrtc_ios_sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = webrtc_ios_sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E730E42924CF8C5700EBF59C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E730E42B24CF8C5700EBF59C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +31,8 @@
 		E730E43224CF8C5900EBF59C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E730E43524CF8C5900EBF59C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E730E43724CF8C5900EBF59C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E730E44024CF94C700EBF59C /* SocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
+		E730E44224CF94D400EBF59C /* PeerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +40,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E730E43F24CF94B300EBF59C /* SwiftyJSON in Frameworks */,
+				C9739E7A397A9ECC00B2F5C2 /* Pods_webrtc_ios_sample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CB27D9D3A672F257485A1F16 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DF23991536DFB765E9851435 /* Pods-webrtc_ios_sample.debug.xcconfig */,
+				686DFD00B351E9186196EEC4 /* Pods-webrtc_ios_sample.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		E730E41D24CF8C5700EBF59C = {
 			isa = PBXGroup;
 			children = (
 				E730E42824CF8C5700EBF59C /* webrtc_ios_sample */,
 				E730E42724CF8C5700EBF59C /* Products */,
+				CB27D9D3A672F257485A1F16 /* Pods */,
+				F08BCF9B3452650B50F5681C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,12 +81,22 @@
 				E730E42924CF8C5700EBF59C /* AppDelegate.swift */,
 				E730E42B24CF8C5700EBF59C /* SceneDelegate.swift */,
 				E730E42D24CF8C5700EBF59C /* ViewController.swift */,
+				E730E44024CF94C700EBF59C /* SocketManager.swift */,
+				E730E44224CF94D400EBF59C /* PeerManager.swift */,
 				E730E42F24CF8C5700EBF59C /* Main.storyboard */,
 				E730E43224CF8C5900EBF59C /* Assets.xcassets */,
 				E730E43424CF8C5900EBF59C /* LaunchScreen.storyboard */,
 				E730E43724CF8C5900EBF59C /* Info.plist */,
 			);
 			path = webrtc_ios_sample;
+			sourceTree = "<group>";
+		};
+		F08BCF9B3452650B50F5681C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E3DC35C682803A6360366884 /* Pods_webrtc_ios_sample.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,15 +106,20 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E730E43A24CF8C5900EBF59C /* Build configuration list for PBXNativeTarget "webrtc_ios_sample" */;
 			buildPhases = (
+				626C0EC1ABB2F6DCC8D68642 /* [CP] Check Pods Manifest.lock */,
 				E730E42224CF8C5700EBF59C /* Sources */,
 				E730E42324CF8C5700EBF59C /* Frameworks */,
 				E730E42424CF8C5700EBF59C /* Resources */,
+				7C7902EA4B6E2078604F3444 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = webrtc_ios_sample;
+			packageProductDependencies = (
+				E730E43E24CF94B300EBF59C /* SwiftyJSON */,
+			);
 			productName = webrtc_ios_sample;
 			productReference = E730E42624CF8C5700EBF59C /* webrtc_ios_sample.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +148,9 @@
 				Base,
 			);
 			mainGroup = E730E41D24CF8C5700EBF59C;
+			packageReferences = (
+				E730E43D24CF94B300EBF59C /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+			);
 			productRefGroup = E730E42724CF8C5700EBF59C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -133,6 +173,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		626C0EC1ABB2F6DCC8D68642 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-webrtc_ios_sample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7C7902EA4B6E2078604F3444 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-webrtc_ios_sample/Pods-webrtc_ios_sample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-webrtc_ios_sample/Pods-webrtc_ios_sample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-webrtc_ios_sample/Pods-webrtc_ios_sample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		E730E42224CF8C5700EBF59C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -140,7 +222,9 @@
 			files = (
 				E730E42E24CF8C5700EBF59C /* ViewController.swift in Sources */,
 				E730E42A24CF8C5700EBF59C /* AppDelegate.swift in Sources */,
+				E730E44124CF94C700EBF59C /* SocketManager.swift in Sources */,
 				E730E42C24CF8C5700EBF59C /* SceneDelegate.swift in Sources */,
+				E730E44324CF94D400EBF59C /* PeerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +284,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -260,6 +345,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -282,6 +368,7 @@
 		};
 		E730E43B24CF8C5900EBF59C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DF23991536DFB765E9851435 /* Pods-webrtc_ios_sample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -300,6 +387,7 @@
 		};
 		E730E43C24CF8C5900EBF59C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 686DFD00B351E9186196EEC4 /* Pods-webrtc_ios_sample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -338,6 +426,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E730E43D24CF94B300EBF59C /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E730E43E24CF94B300EBF59C /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E730E43D24CF94B300EBF59C /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E730E41E24CF8C5700EBF59C /* Project object */;
 }

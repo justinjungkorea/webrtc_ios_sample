@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -9,16 +10,91 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="webrtc_ios_sample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5ef-YA-oW4" userLabel="ButtonView">
+                                <rect key="frame" x="0.0" y="44" width="414" height="80"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gJp-kQ-lIh">
+                                        <rect key="frame" x="10" y="0.0" width="59" height="80"/>
+                                        <state key="normal" title="Connect"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Dv-dw-V4g">
+                                        <rect key="frame" x="146" y="0.0" width="68" height="80"/>
+                                        <state key="normal" title="RoomJoin"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pBv-9X-bxE">
+                                        <rect key="frame" x="224" y="0.0" width="36" height="80"/>
+                                        <state key="normal" title="Send"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ohj-oN-1tM">
+                                        <rect key="frame" x="79" y="0.0" width="57" height="80"/>
+                                        <state key="normal" title="Register"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="gJp-kQ-lIh" secondAttribute="bottom" id="6M2-AT-tPL"/>
+                                    <constraint firstItem="pBv-9X-bxE" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="8Ou-kL-Hvc"/>
+                                    <constraint firstItem="gJp-kQ-lIh" firstAttribute="leading" secondItem="5ef-YA-oW4" secondAttribute="leading" constant="10" id="C7c-wK-JzA"/>
+                                    <constraint firstItem="2Dv-dw-V4g" firstAttribute="leading" secondItem="Ohj-oN-1tM" secondAttribute="trailing" constant="10" id="FWO-0G-jPA"/>
+                                    <constraint firstItem="2Dv-dw-V4g" firstAttribute="leading" secondItem="Ohj-oN-1tM" secondAttribute="trailing" constant="10" id="HEx-DN-968"/>
+                                    <constraint firstItem="Ohj-oN-1tM" firstAttribute="leading" secondItem="gJp-kQ-lIh" secondAttribute="trailing" constant="10" id="OhG-n6-fiN"/>
+                                    <constraint firstAttribute="bottom" secondItem="pBv-9X-bxE" secondAttribute="bottom" id="QJA-oZ-wd3"/>
+                                    <constraint firstAttribute="height" constant="80" id="RRZ-kq-bms"/>
+                                    <constraint firstItem="Ohj-oN-1tM" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="Siz-3r-eGd"/>
+                                    <constraint firstAttribute="bottom" secondItem="Ohj-oN-1tM" secondAttribute="bottom" id="aOq-zS-Lg2"/>
+                                    <constraint firstItem="Ohj-oN-1tM" firstAttribute="leading" secondItem="gJp-kQ-lIh" secondAttribute="trailing" constant="10" id="e7s-bX-Tip"/>
+                                    <constraint firstAttribute="bottom" secondItem="2Dv-dw-V4g" secondAttribute="bottom" id="mby-oH-U3k"/>
+                                    <constraint firstItem="gJp-kQ-lIh" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="pDR-tj-ZGH"/>
+                                    <constraint firstItem="2Dv-dw-V4g" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="sRv-NH-Cdx"/>
+                                    <constraint firstItem="pBv-9X-bxE" firstAttribute="leading" secondItem="2Dv-dw-V4g" secondAttribute="trailing" constant="10" id="wbd-x5-3AC"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ghZ-BK-OaZ" userLabel="localView">
+                                <rect key="frame" x="0.0" y="124" width="414" height="230"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="230" id="YkW-Rg-LWJ"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ys6-aq-pNk" userLabel="remoteView">
+                                <rect key="frame" x="0.0" y="354" width="414" height="230"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="230" id="PGF-GO-huw"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ghZ-BK-OaZ" secondAttribute="trailing" id="5c3-5A-dHc"/>
+                            <constraint firstItem="Ys6-aq-pNk" firstAttribute="top" secondItem="ghZ-BK-OaZ" secondAttribute="bottom" id="NVm-Eh-mcw"/>
+                            <constraint firstItem="ghZ-BK-OaZ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="QdH-PV-e2P"/>
+                            <constraint firstItem="5ef-YA-oW4" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Rsu-ce-s56"/>
+                            <constraint firstItem="5ef-YA-oW4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="WlG-LD-8Dl"/>
+                            <constraint firstItem="5ef-YA-oW4" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="cMM-Wt-It8"/>
+                            <constraint firstItem="Ys6-aq-pNk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="oph-eo-kli"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ys6-aq-pNk" secondAttribute="trailing" id="prR-Sm-SCm"/>
+                            <constraint firstItem="ghZ-BK-OaZ" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="bottom" id="xHj-qK-PNd"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="ConnectBtn" destination="gJp-kQ-lIh" id="AE8-yV-Uhr"/>
+                        <outlet property="LocalView" destination="ghZ-BK-OaZ" id="WX2-FL-PWd"/>
+                        <outlet property="RegisterBtn" destination="Ohj-oN-1tM" id="duJ-C6-mQT"/>
+                        <outlet property="RemoteView" destination="Ys6-aq-pNk" id="PfC-HI-e8e"/>
+                        <outlet property="RoomJoinBtn" destination="2Dv-dw-V4g" id="xbH-sQ-Pff"/>
+                        <outlet property="SendBtn" destination="pBv-9X-bxE" id="2RO-b9-IRl"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="129.91071428571428"/>
         </scene>
     </scenes>
 </document>
