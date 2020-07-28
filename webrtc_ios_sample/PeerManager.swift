@@ -63,14 +63,7 @@ class PeersManager: NSObject {
             
             
             
-            
-            
-            
-            
-            
-            
-            
-            
+
             var localOfferParams: [String: String] = [:]
             localOfferParams["audioActive"] = "true"
             localOfferParams["videoActive"] = "true"

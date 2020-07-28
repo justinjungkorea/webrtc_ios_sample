@@ -45,6 +45,9 @@ class SocketListener: NSObject {
                 else if eventOp == "RoomJoin" {
                     self.roomId = getValue(inputData: data, key: "roomId") as! String
                 }
+                else if eventOp == "SDP" {
+                    
+                }
                 
             }
             
@@ -101,8 +104,19 @@ class SocketListener: NSObject {
     }
     
     func sdpOffer(sdp: String){
+        let sample: [String: Any] = [
+            "eventOp": "SDP",
+            "reqNo": getReqNo(),
+            "reqDate": getDate(),
+            "roomId": getRoomId(),
+            "sdp": sdp,
+            "type": "cam"
+        ]
         
+        let sendData = arrayToJSON(inputData: sample)
+        socket.emit("knowledgetalk", sendData as! SocketData)
     }
+    
     
     
 }
