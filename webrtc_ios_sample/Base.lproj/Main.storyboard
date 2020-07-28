@@ -21,18 +21,30 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gJp-kQ-lIh">
                                         <rect key="frame" x="10" y="0.0" width="59" height="80"/>
                                         <state key="normal" title="Connect"/>
+                                        <connections>
+                                            <action selector="connectButtonWith_sender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ocj-fV-Z5d"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Dv-dw-V4g">
                                         <rect key="frame" x="146" y="0.0" width="68" height="80"/>
                                         <state key="normal" title="RoomJoin"/>
+                                        <connections>
+                                            <action selector="RoomJoinButtonWith_sender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="IGc-sE-oLm"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pBv-9X-bxE">
                                         <rect key="frame" x="224" y="0.0" width="36" height="80"/>
                                         <state key="normal" title="Send"/>
+                                        <connections>
+                                            <action selector="sendButtonWith_sender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="J1p-qd-b7a"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ohj-oN-1tM">
                                         <rect key="frame" x="79" y="0.0" width="57" height="80"/>
                                         <state key="normal" title="Register"/>
+                                        <connections>
+                                            <action selector="RegisterButtonWith_sender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="o5V-sZ-BrK"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>

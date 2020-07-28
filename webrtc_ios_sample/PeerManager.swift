@@ -16,7 +16,7 @@ class PeersManager: NSObject {
     var remotePeer: RTCPeerConnection?
     var peerConnectionFactory: RTCPeerConnectionFactory?
     var connectionConstraints: RTCMediaConstraints?
-    var socketListener: SocketManager?
+    var socketListener: SocketListener?
     
     var localVideoTrack: RTCVideoTrack?
     var localAudioTrack: RTCAudioTrack?
@@ -25,10 +25,10 @@ class PeersManager: NSObject {
     var remoteStream: RTCMediaStream?
     
     init(view: UIView){
-        self.view = view
+        self.view = view
     }
     
-    func setSocketAdapter(socketAdapter: SocketManager){
+    func setSocketAdapter(socketAdapter: SocketListener){
         self.socketListener = socketAdapter
     }
     
@@ -55,5 +55,72 @@ class PeersManager: NSObject {
         localPeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
     }
     
+    func createLocalOffer(mediaConstraints: RTCMediaConstraints){
+        localPeer!.offer(for: mediaConstraints, completionHandler: { (sessionDescription, error) in
+            self.localPeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
+                print("Local Peer Session Description: \(error.debugDescription)")
+            })
+            
+            var localOfferParams: [String: String] = [:]
+            localOfferParams["audioActive"] = "true"
+            localOfferParams["videoActive"] = "true"
+            localOfferParams["doLoopback"] = "false"
+            localOfferParams["frameRate"] = "30"
+            localOfferParams["typeOfVideo"] = "CAMERA"
+            localOfferParams["sdpOffer"] = sessionDescription!.sdp
+            
+            self.socketListener!.sdpOffer(sdp: sessionDescription!.sdp)
+        })
+    }
     
+}
+
+extension PeersManager: RTCPeerConnectionDelegate {
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
+        print("peerConnection new signaling state: \(stateChanged)")
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
+        if peerConnection == self.localPeer {
+            print("local peerConnection did add stream")
+        }
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
+        print("peerConnection did remote stream")
+    }
+    
+    func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
+        if peerConnection == self.localPeer {
+            print("local peerConnection should negotiate")
+        } else {
+            print("remote peerConnection should negotiate")
+        }
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
+        print("peerConnection new connection state: \(newState.rawValue)")
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
+        print("peerConnection new gathering state: \(newState.rawValue)")
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
+        if peerConnection == self.localPeer {
+            
+        } else {
+            
+            print("NEW remote ice candidate")
+        }
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
+        
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
+        print("peerConnection did open data channel")
+    }
 }

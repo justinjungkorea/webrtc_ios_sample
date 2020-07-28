@@ -18,10 +18,18 @@ class ViewController: UIViewController {
     @IBOutlet var LocalView: UIView!
     @IBOutlet var RemoteView: UIView!
     
+    var socketListstener = SocketListener()
+    var peersManager: PeersManager?
+    var localAudioTrack: RTCAudioTrack?
+    var localVideoTrack: RTCVideoTrack?
+    var videoSource: RTCVideoSource?
+    private var videoCapturer: RTCVideoCapturer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        AVCaptureDevice.requestAccess(for: AVMediaType.video){  response in
+        
+        AVCaptureDevice.requestAccess(for: AVMediaType.video){ response in
             if response {
                 print("Camera Permission Granted")
             } else {
@@ -30,7 +38,118 @@ class ViewController: UIViewController {
         }
         
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.peersManager = PeersManager(view: self.view)
+    }
+    
+    
+    @IBAction func connectButton(_sender: Any){
+        socketListstener.establishConnection()
+    }
+    
+    @IBAction func RegisterButton(_sender: Any){
+        socketListstener.Register()
+        
+    }
+    
+    @IBAction func RoomJoinButton(_sender: Any){
+        socketListstener.roomJoin()
+        
+//        self.createLocalVideoView()
+//        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
+//        let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
+//        self.peersManager!.createLocalOffer(mediaConstraints: sdpConstraints);
+        
+    }
+    
+    @IBAction func sendButton(_sender: Any){
+        
+    }
+    
+    
+    func createLocalVideoView(){
+        #if arch(arm64)
+            let renderer = RTCMTLVideoView(frame: self.LocalView.frame)
+        #else
+            let renderer = RTCEAGLVideoView(frame: self.LocalView.frame)
+        #endif
+        startCaptureLocalVideo(renderer: renderer)
 
+        self.embedView(renderer, into: self.LocalView)
+    }
+    
+    func startCaptureLocalVideo(renderer: RTCVideoRenderer){
+//        createMediaSenders()
+        
+//        guard let stream = self.peersManager!.localPeer!.localStreams.first ,
+//            let capturer = self.videoCapturer as? RTCCameraVideoCapturer else {
+//                return
+//        }
+//
+//        guard
+//            let frontCamera = (RTCCameraVideoCapturer.captureDevices().first { $0.position == .front }),
+//
+//            // choose highest res
+//            let format = (RTCCameraVideoCapturer.supportedFormats(for: frontCamera).sorted { (f1, f2) -> Bool in
+//                let width1 = CMVideoFormatDescriptionGetDimensions(f1.formatDescription).width
+//                let width2 = CMVideoFormatDescriptionGetDimensions(f2.formatDescription).width
+//                return width1 < width2
+//            }).last,
+//
+//            // choose highest fps
+//            let fps = (format.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else {
+//                return
+//        }
+//
+//        capturer.startCapture(with: frontCamera,
+//                                    format: format,
+//                                    fps: Int(fps.maxFrameRate))
+//
+//
+//        stream.videoTracks.first?.add(renderer)
+    }
+    
+    private func createMediaSenders() {
+        let stream = self.peersManager!.peerConnectionFactory!.mediaStream(withStreamId: "streamId")
+        
+        // Audio
+        let audioConstrains = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
+        let audioSource = self.peersManager!.peerConnectionFactory!.audioSource(with: audioConstrains)
+        let audioTrack = self.peersManager!.peerConnectionFactory!.audioTrack(with: audioSource, trackId: "audio0")
+        self.localAudioTrack = audioTrack
+        self.peersManager!.localAudioTrack = audioTrack
+        stream.addAudioTrack(audioTrack)
+        
+        // Video
+        let videoSource = self.peersManager!.peerConnectionFactory!.videoSource()
+        self.videoCapturer = RTCCameraVideoCapturer(delegate: videoSource)
+        let videoTrack = self.peersManager!.peerConnectionFactory!.videoTrack(with: videoSource, trackId: "video0")
+        self.peersManager!.localVideoTrack = videoTrack
+        self.localVideoTrack = videoTrack
+        stream.addVideoTrack(videoTrack)
+        
+        self.peersManager!.localPeer!.add(stream)
+        self.peersManager!.localPeer!.delegate = self.peersManager!
+    }
+    
+    func embedView(_ view: UIView, into containerView: UIView) {
+        containerView.addSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let width = (UIScreen.main.bounds.width)
+        let height = (UIScreen.main.bounds.height)
+        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[view(" + width.description + ")]",
+                                                                    options: NSLayoutConstraint.FormatOptions(),
+                                                                    metrics: nil,
+                                                                    views: ["view":view]))
+        
+        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[view(" + height.description + ")]",
+                                                                    options:NSLayoutConstraint.FormatOptions(),
+                                                                    metrics: nil,
+                                                                    views: ["view":view]))
+        containerView.layoutIfNeeded()
+    }
 
 }
 
