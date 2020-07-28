@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("viewDidLoad")
         
         AVCaptureDevice.requestAccess(for: AVMediaType.video){ response in
             if response {
@@ -37,11 +37,22 @@ class ViewController: UIViewController {
             }
         }
         
+        LocalView.backgroundColor = UIColor.green
+        RemoteView.backgroundColor = UIColor.blue
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        print("viewDidApper")
+        
         self.peersManager = PeersManager(view: self.view)
+        self.peersManager!.socketListener = socketListstener
+        self.peersManager!.start()
+        
+        self.createLocalVideoView()
+        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
+        let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
+        self.peersManager!.createLocalOffer(mediaConstraints: sdpConstraints);
     }
     
     
@@ -57,10 +68,6 @@ class ViewController: UIViewController {
     @IBAction func RoomJoinButton(_sender: Any){
         socketListstener.roomJoin()
         
-//        self.createLocalVideoView()
-//        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
-//        let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
-//        self.peersManager!.createLocalOffer(mediaConstraints: sdpConstraints);
         
     }
     
@@ -81,39 +88,39 @@ class ViewController: UIViewController {
     }
     
     func startCaptureLocalVideo(renderer: RTCVideoRenderer){
-//        createMediaSenders()
+        createMediaSenders()
         
-//        guard let stream = self.peersManager!.localPeer!.localStreams.first ,
-//            let capturer = self.videoCapturer as? RTCCameraVideoCapturer else {
-//                return
-//        }
-//
-//        guard
-//            let frontCamera = (RTCCameraVideoCapturer.captureDevices().first { $0.position == .front }),
-//
-//            // choose highest res
-//            let format = (RTCCameraVideoCapturer.supportedFormats(for: frontCamera).sorted { (f1, f2) -> Bool in
-//                let width1 = CMVideoFormatDescriptionGetDimensions(f1.formatDescription).width
-//                let width2 = CMVideoFormatDescriptionGetDimensions(f2.formatDescription).width
-//                return width1 < width2
-//            }).last,
-//
-//            // choose highest fps
-//            let fps = (format.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else {
-//                return
-//        }
-//
-//        capturer.startCapture(with: frontCamera,
-//                                    format: format,
-//                                    fps: Int(fps.maxFrameRate))
-//
-//
-//        stream.videoTracks.first?.add(renderer)
+        guard let stream = self.peersManager!.localPeer!.localStreams.first ,
+            let capturer = self.videoCapturer as? RTCCameraVideoCapturer else {
+                return
+        }
+
+        guard
+            let frontCamera = (RTCCameraVideoCapturer.captureDevices().first { $0.position == .front }),
+
+            // choose highest res
+            let format = (RTCCameraVideoCapturer.supportedFormats(for: frontCamera).sorted { (f1, f2) -> Bool in
+                let width1 = CMVideoFormatDescriptionGetDimensions(f1.formatDescription).width
+                let width2 = CMVideoFormatDescriptionGetDimensions(f2.formatDescription).width
+                return width1 < width2
+            }).last,
+
+            // choose highest fps
+            let fps = (format.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else {
+                return
+        }
+
+        capturer.startCapture(with: frontCamera,
+                                    format: format,
+                                    fps: Int(fps.maxFrameRate))
+
+
+        stream.videoTracks.first?.add(renderer)
     }
     
     private func createMediaSenders() {
-        let stream = self.peersManager!.peerConnectionFactory!.mediaStream(withStreamId: "streamId")
-        
+        let stream = self.peersManager!.peerConnectionFactory!.mediaStream(withStreamId: "stream")
+
         // Audio
         let audioConstrains = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
         let audioSource = self.peersManager!.peerConnectionFactory!.audioSource(with: audioConstrains)
@@ -121,7 +128,7 @@ class ViewController: UIViewController {
         self.localAudioTrack = audioTrack
         self.peersManager!.localAudioTrack = audioTrack
         stream.addAudioTrack(audioTrack)
-        
+
         // Video
         let videoSource = self.peersManager!.peerConnectionFactory!.videoSource()
         self.videoCapturer = RTCCameraVideoCapturer(delegate: videoSource)
@@ -129,7 +136,7 @@ class ViewController: UIViewController {
         self.peersManager!.localVideoTrack = videoTrack
         self.localVideoTrack = videoTrack
         stream.addVideoTrack(videoTrack)
-        
+
         self.peersManager!.localPeer!.add(stream)
         self.peersManager!.localPeer!.delegate = self.peersManager!
     }

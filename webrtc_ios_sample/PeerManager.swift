@@ -68,7 +68,7 @@ class PeersManager: NSObject {
             localOfferParams["frameRate"] = "30"
             localOfferParams["typeOfVideo"] = "CAMERA"
             localOfferParams["sdpOffer"] = sessionDescription!.sdp
-            
+            print("########## check ########## createLocalOffer \(sessionDescription!.sdp)")
             self.socketListener!.sdpOffer(sdp: sessionDescription!.sdp)
         })
     }
