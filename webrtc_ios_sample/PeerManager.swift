@@ -61,6 +61,16 @@ class PeersManager: NSObject {
                 print("Local Peer Session Description: \(error.debugDescription)")
             })
             
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             var localOfferParams: [String: String] = [:]
             localOfferParams["audioActive"] = "true"
             localOfferParams["videoActive"] = "true"
