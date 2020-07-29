@@ -13,20 +13,21 @@ import WebRTC
 import Starscream
 
 class SocketListener: NSObject {
-    static let shared = SocketListener()
     
     var manager: SocketManager?
     var socket: SocketIOClient!
     var socketId: String!
     var roomId: String = ""
-    var answerSdp: String = ""
+    var peersManager: PeersManager
+    var remoteView: UIView!
     var id = 0
     
-    override init() {
-        super.init()
+    init(peersManager: PeersManager, remoteView: UIView) {
         
         self.manager = SocketManager(socketURL: URL(string: "https://106.240.247.44:7605")!, config: [.log(false), .forceWebsockets(true), .secure(true), .selfSigned(true)])
         
+        self.peersManager = peersManager
+        self.remoteView = remoteView
     }
     
     func establishConnection() {
@@ -37,31 +38,41 @@ class SocketListener: NSObject {
         socket.on("knowledgetalk"){data, ack in
             print("receive ::: \(data)")
             let eventOp: String = getValue(inputData: data, key: "eventOp")!
-            
             let signalOp: String = getValue(inputData: data, key: "signalOp")!
+            
             if(!eventOp.isEmpty){
                 if eventOp == "Register" {
-                    self.socketId = getValue(inputData: data, key: "socketId") as! String
+                    self.socketId = getValue(inputData: data, key: "socketId")!
                 }
                 else if eventOp == "RoomJoin" {
-                    self.roomId = getValue(inputData: data, key: "roomId") as! String
-                    
-                    let sample: [String: Any] = [
-                        "eventOp": "JoinVideoRoom",
-                        "reqNo": getReqNo(),
-                        "reqDate": getDate(),
-                        "roomId": self.roomId,
-                        "host": true,
-                        "subscribe": true,
-                        "type": "cam"
-                    ]
-                    
-                    let sendData = arrayToJSON(inputData: sample)
-                    self.socket.emit("knowledgetalk", sendData as! SocketData)
+                    self.roomId = getValue(inputData: data, key: "roomId")!
                 }
                 else if eventOp == "SDP"{
-                    var sdp = getValue(inputData: data, key: "sdp") as! String
-                    self.answerSdp = getValue(inputData: sdp, key: "sdp") as! String
+                    var sdp = getValue(inputData: data, key: "sdp")!
+                    if !sdp.isEmpty {
+                        let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
+                        self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
+                            print("Remote Peer Remote Description set: " + error.debugDescription)
+                        })
+                        
+                        #if arch(arm64)
+                        let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
+                        #else
+                        let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
+                        #endif
+    
+                        let videoTrack = self.peersManager.remoteStream?.videoTracks[0]
+                        videoTrack?.add(renderer)
+                    }
+                }
+                else if eventOp == "SDPVideoRoom"{
+                    var sdp = getValue(inputData: data, key: "sdp")!
+                    if(!sdp.isEmpty){
+                        let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
+                        self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
+                            print("Remote Peer Remote Description set: " + error.debugDescription)
+                        })
+                    }
                 }
                 
             }
@@ -118,7 +129,41 @@ class SocketListener: NSObject {
         socket.emit("knowledgetalk", sendData as! SocketData)
     }
     
+    func janusJoin(){
+        let sample: [String: Any] = [
+            "eventOp": "JoinVideoRoom",
+            "reqNo": getReqNo(),
+            "reqDate": getDate(),
+            "roomId": self.roomId,
+            "host": true,
+            "subscribe": true,
+            "type": "cam"
+        ]
+
+        let sendData = arrayToJSON(inputData: sample)
+        self.socket.emit("knowledgetalk", sendData as! SocketData)
+    }
+    
     func sdpOffer(sdp: String?){
+        let sdpSample: [String: Any] = [
+            "type": "offer",
+            "sdp": sdp!
+        ]
+        
+        let sample: [String: Any] = [
+            "eventOp": "SDP",
+            "reqNo": getReqNo(),
+            "reqDate": getDate(),
+            "roomId": self.roomId,
+            "sdp": arrayToJSON(inputData: sdpSample),
+            "type": "cam"
+        ]
+        
+        let sendData = arrayToJSON(inputData: sample)
+        socket.emit("knowledgetalk", sendData as! SocketData)
+    }
+    
+    func publish(sdp: String?){
         let sdpSample: [String: Any] = [
             "type": "offer",
             "sdp": sdp!
@@ -154,8 +199,10 @@ func arrayToJSON(inputData: [String: Any]) -> Any {
 }
 
 func getValue(inputData: Any, key: String) -> String? {
+    if(key == "sdp"){
+        return JSON(inputData)[0][key][key].stringValue
+    }
     let jsonData = JSON(inputData)[0]
-    print(jsonData)
     let result = jsonData[key].stringValue
     if(result.isEmpty){
         return ""

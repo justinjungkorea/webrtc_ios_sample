@@ -49,7 +49,7 @@ class PeersManager: NSObject {
     func createLocalPeerConnection(sdpConstraints: RTCMediaConstraints){
         let config = RTCConfiguration()
         config.bundlePolicy = .maxCompat
-        config.iceServers = [RTCIceServer(urlStrings: ["stun:stun.1.google.com:19302"])]
+        config.iceServers = [RTCIceServer(urlStrings: ["turn:13.125.217.175:46000"], username: "kpoint", credential: "kpoint01")]
         config.rtcpMuxPolicy = .require
         
         localPeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
@@ -68,8 +68,24 @@ class PeersManager: NSObject {
             localOfferParams["frameRate"] = "30"
             localOfferParams["typeOfVideo"] = "CAMERA"
             localOfferParams["sdpOffer"] = sessionDescription!.sdp
-            print("########## check ########## createLocalOffer \(sessionDescription!.sdp)")
             self.socketListener!.sdpOffer(sdp: sessionDescription!.sdp)
+        })
+    }
+    
+    func createjanusOffer(mediaConstraints: RTCMediaConstraints){
+        localPeer!.offer(for: mediaConstraints, completionHandler: { (sessionDescription, error) in
+            self.localPeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
+                print("Local Peer Session Description: \(error.debugDescription)")
+            })
+
+            var localOfferParams: [String: String] = [:]
+            localOfferParams["audioActive"] = "true"
+            localOfferParams["videoActive"] = "true"
+            localOfferParams["doLoopback"] = "false"
+            localOfferParams["frameRate"] = "30"
+            localOfferParams["typeOfVideo"] = "CAMERA"
+            localOfferParams["sdpOffer"] = sessionDescription!.sdp
+            self.socketListener!.publish(sdp: sessionDescription!.sdp)
         })
     }
     
@@ -83,7 +99,7 @@ extension PeersManager: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         if peerConnection == self.localPeer {
-            print("local peerConnection did add stream")
+            print("local peerConnection did add stream", stream)
         }
     }
     

@@ -15,11 +15,13 @@ class ViewController: UIViewController {
     @IBOutlet var RegisterBtn: UIButton!
     @IBOutlet var RoomJoinBtn: UIButton!
     @IBOutlet var SendBtn: UIButton!
+    @IBOutlet weak var JanusBtn: UIButton!
+    @IBOutlet weak var PubBtn: UIButton!
     @IBOutlet var LocalView: UIView!
     @IBOutlet var RemoteView: UIView!
     
-    var socketListstener = SocketListener()
     var peersManager: PeersManager?
+    var socketListstener: SocketListener?
     var localAudioTrack: RTCAudioTrack?
     var localVideoTrack: RTCVideoTrack?
     var videoSource: RTCVideoSource?
@@ -46,6 +48,7 @@ class ViewController: UIViewController {
         print("viewDidApper")
         
         self.peersManager = PeersManager(view: self.view)
+        socketListstener = SocketListener(peersManager: self.peersManager!, remoteView: self.RemoteView)
         self.peersManager!.socketListener = socketListstener
         self.peersManager!.start()
         
@@ -56,18 +59,16 @@ class ViewController: UIViewController {
     
     
     @IBAction func connectButton(_sender: Any){
-        socketListstener.establishConnection()
+        socketListstener!.establishConnection()
     }
     
     @IBAction func RegisterButton(_sender: Any){
-        socketListstener.Register()
+        socketListstener!.Register()
         
     }
     
     @IBAction func RoomJoinButton(_sender: Any){
-        socketListstener.roomJoin()
-        
-        
+        socketListstener!.roomJoin()
     }
     
     @IBAction func sendButton(_sender: Any){
@@ -77,13 +78,25 @@ class ViewController: UIViewController {
         self.peersManager!.createLocalOffer(mediaConstraints: sdpConstraints);
     }
     
+    @IBAction func janusButton(_sender: Any){
+        socketListstener!.janusJoin()
+    }
     
+    @IBAction func pubButton(_sender: Any){
+        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
+        
+        let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
+        self.peersManager!.createjanusOffer(mediaConstraints: sdpConstraints);
+    }
+        
     func createLocalVideoView(){
         #if arch(arm64)
             let renderer = RTCMTLVideoView(frame: self.LocalView.frame)
         #else
             let renderer = RTCEAGLVideoView(frame: self.LocalView.frame)
         #endif
+        
+        renderer.videoContentMode = .scaleAspectFit
         startCaptureLocalVideo(renderer: renderer)
 
         self.embedView(renderer, into: self.LocalView)
@@ -146,7 +159,7 @@ class ViewController: UIViewController {
     
     func embedView(_ view: UIView, into containerView: UIView) {
         containerView.addSubview(view)
-        view.translatesAutoresizingMaskIntoConstraints = true
+        view.translatesAutoresizingMaskIntoConstraints = false
         let width = (containerView.frame.width)
         let height = (containerView.frame.height)
         print("width: \(width), height: \(height)")

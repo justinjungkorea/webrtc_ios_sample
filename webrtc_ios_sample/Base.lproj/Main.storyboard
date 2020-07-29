@@ -46,6 +46,20 @@
                                             <action selector="RegisterButtonWith_sender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="o5V-sZ-BrK"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y4S-FP-tjg" userLabel="Janus Btn">
+                                        <rect key="frame" x="270" y="0.0" width="41" height="80"/>
+                                        <state key="normal" title="Janus"/>
+                                        <connections>
+                                            <action selector="janusButtonWith_sender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="U7Q-lA-slL"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nzS-so-PzI" userLabel="Pub Btn">
+                                        <rect key="frame" x="321" y="0.0" width="30" height="80"/>
+                                        <state key="normal" title="Pub"/>
+                                        <connections>
+                                            <action selector="pubButtonWith_sender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Pbu-Ov-PCT"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
@@ -54,23 +68,30 @@
                                     <constraint firstItem="gJp-kQ-lIh" firstAttribute="leading" secondItem="5ef-YA-oW4" secondAttribute="leading" constant="10" id="C7c-wK-JzA"/>
                                     <constraint firstItem="2Dv-dw-V4g" firstAttribute="leading" secondItem="Ohj-oN-1tM" secondAttribute="trailing" constant="10" id="FWO-0G-jPA"/>
                                     <constraint firstItem="2Dv-dw-V4g" firstAttribute="leading" secondItem="Ohj-oN-1tM" secondAttribute="trailing" constant="10" id="HEx-DN-968"/>
+                                    <constraint firstAttribute="bottom" secondItem="nzS-so-PzI" secondAttribute="bottom" id="J9Q-j2-OXo"/>
+                                    <constraint firstAttribute="bottom" secondItem="Y4S-FP-tjg" secondAttribute="bottom" id="LvE-Dx-mq0"/>
                                     <constraint firstItem="Ohj-oN-1tM" firstAttribute="leading" secondItem="gJp-kQ-lIh" secondAttribute="trailing" constant="10" id="OhG-n6-fiN"/>
                                     <constraint firstAttribute="bottom" secondItem="pBv-9X-bxE" secondAttribute="bottom" id="QJA-oZ-wd3"/>
                                     <constraint firstAttribute="height" constant="80" id="RRZ-kq-bms"/>
                                     <constraint firstItem="Ohj-oN-1tM" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="Siz-3r-eGd"/>
+                                    <constraint firstItem="Y4S-FP-tjg" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="Vcc-lZ-pU1"/>
+                                    <constraint firstItem="Y4S-FP-tjg" firstAttribute="leading" secondItem="pBv-9X-bxE" secondAttribute="trailing" constant="10" id="WXc-we-tQy"/>
                                     <constraint firstAttribute="bottom" secondItem="Ohj-oN-1tM" secondAttribute="bottom" id="aOq-zS-Lg2"/>
+                                    <constraint firstItem="nzS-so-PzI" firstAttribute="leading" secondItem="Y4S-FP-tjg" secondAttribute="trailing" constant="10" id="bFm-hv-149"/>
                                     <constraint firstItem="Ohj-oN-1tM" firstAttribute="leading" secondItem="gJp-kQ-lIh" secondAttribute="trailing" constant="10" id="e7s-bX-Tip"/>
                                     <constraint firstAttribute="bottom" secondItem="2Dv-dw-V4g" secondAttribute="bottom" id="mby-oH-U3k"/>
                                     <constraint firstItem="gJp-kQ-lIh" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="pDR-tj-ZGH"/>
+                                    <constraint firstItem="nzS-so-PzI" firstAttribute="leading" secondItem="Y4S-FP-tjg" secondAttribute="trailing" constant="10" id="pVH-2I-tXK"/>
                                     <constraint firstItem="2Dv-dw-V4g" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="sRv-NH-Cdx"/>
                                     <constraint firstItem="pBv-9X-bxE" firstAttribute="leading" secondItem="2Dv-dw-V4g" secondAttribute="trailing" constant="10" id="wbd-x5-3AC"/>
+                                    <constraint firstItem="nzS-so-PzI" firstAttribute="top" secondItem="5ef-YA-oW4" secondAttribute="top" id="zER-vF-Dwf"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ghZ-BK-OaZ" userLabel="localView">
                                 <rect key="frame" x="0.0" y="124" width="414" height="230"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="230" id="YkW-Rg-LWJ"/>
+                                    <constraint firstAttribute="height" constant="230" id="Y8S-BQ-sGf"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ys6-aq-pNk" userLabel="remoteView">
@@ -97,7 +118,9 @@
                     </view>
                     <connections>
                         <outlet property="ConnectBtn" destination="gJp-kQ-lIh" id="AE8-yV-Uhr"/>
+                        <outlet property="JanusBtn" destination="Y4S-FP-tjg" id="D1Q-eY-CJN"/>
                         <outlet property="LocalView" destination="ghZ-BK-OaZ" id="WX2-FL-PWd"/>
+                        <outlet property="PubBtn" destination="nzS-so-PzI" id="feK-8f-pt5"/>
                         <outlet property="RegisterBtn" destination="Ohj-oN-1tM" id="duJ-C6-mQT"/>
                         <outlet property="RemoteView" destination="Ys6-aq-pNk" id="PfC-HI-e8e"/>
                         <outlet property="RoomJoinBtn" destination="2Dv-dw-V4g" id="xbH-sQ-Pff"/>
