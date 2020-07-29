@@ -60,9 +60,6 @@ class PeersManager: NSObject {
             self.localPeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
                 print("Local Peer Session Description: \(error.debugDescription)")
             })
-            
-            
-            
 
             var localOfferParams: [String: String] = [:]
             localOfferParams["audioActive"] = "true"

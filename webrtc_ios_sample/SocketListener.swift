@@ -18,7 +18,8 @@ class SocketListener: NSObject {
     var manager: SocketManager?
     var socket: SocketIOClient!
     var socketId: String!
-    var roomId: String!
+    var roomId: String = ""
+    var answerSdp: String = ""
     var id = 0
     
     override init() {
@@ -44,9 +45,23 @@ class SocketListener: NSObject {
                 }
                 else if eventOp == "RoomJoin" {
                     self.roomId = getValue(inputData: data, key: "roomId") as! String
-                }
-                else if eventOp == "SDP" {
                     
+                    let sample: [String: Any] = [
+                        "eventOp": "JoinVideoRoom",
+                        "reqNo": getReqNo(),
+                        "reqDate": getDate(),
+                        "roomId": self.roomId,
+                        "host": true,
+                        "subscribe": true,
+                        "type": "cam"
+                    ]
+                    
+                    let sendData = arrayToJSON(inputData: sample)
+                    self.socket.emit("knowledgetalk", sendData as! SocketData)
+                }
+                else if eventOp == "SDP"{
+                    var sdp = getValue(inputData: data, key: "sdp") as! String
+                    self.answerSdp = getValue(inputData: sdp, key: "sdp") as! String
                 }
                 
             }
@@ -103,22 +118,25 @@ class SocketListener: NSObject {
         socket.emit("knowledgetalk", sendData as! SocketData)
     }
     
-    func sdpOffer(sdp: String){
+    func sdpOffer(sdp: String?){
+        let sdpSample: [String: Any] = [
+            "type": "offer",
+            "sdp": sdp!
+        ]
+        
         let sample: [String: Any] = [
-            "eventOp": "SDP",
+            "eventOp": "SDPVideoRoom",
             "reqNo": getReqNo(),
             "reqDate": getDate(),
-            "roomId": getRoomId(),
-            "sdp": sdp,
+            "roomId": self.roomId,
+            "sdp": arrayToJSON(inputData: sdpSample),
             "type": "cam"
         ]
         
         let sendData = arrayToJSON(inputData: sample)
         socket.emit("knowledgetalk", sendData as! SocketData)
     }
-    
-    
-    
+
 }
 
 func arrayToJSON(inputData: [String: Any]) -> Any {

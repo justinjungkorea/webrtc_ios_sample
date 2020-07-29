@@ -50,9 +50,8 @@ class ViewController: UIViewController {
         self.peersManager!.start()
         
         self.createLocalVideoView()
-        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
-        let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
-        self.peersManager!.createLocalOffer(mediaConstraints: sdpConstraints);
+        
+        
     }
     
     
@@ -72,7 +71,10 @@ class ViewController: UIViewController {
     }
     
     @IBAction func sendButton(_sender: Any){
+        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
         
+        let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
+        self.peersManager!.createLocalOffer(mediaConstraints: sdpConstraints);
     }
     
     
@@ -104,6 +106,7 @@ class ViewController: UIViewController {
                 let width2 = CMVideoFormatDescriptionGetDimensions(f2.formatDescription).width
                 return width1 < width2
             }).last,
+            
 
             // choose highest fps
             let fps = (format.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else {
@@ -143,18 +146,20 @@ class ViewController: UIViewController {
     
     func embedView(_ view: UIView, into containerView: UIView) {
         containerView.addSubview(view)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        let width = (UIScreen.main.bounds.width)
-        let height = (UIScreen.main.bounds.height)
-        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[view(" + width.description + ")]",
-                                                                    options: NSLayoutConstraint.FormatOptions(),
-                                                                    metrics: nil,
-                                                                    views: ["view":view]))
+        view.translatesAutoresizingMaskIntoConstraints = true
+        let width = (containerView.frame.width)
+        let height = (containerView.frame.height)
+        print("width: \(width), height: \(height)")
         
         containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[view(" + height.description + ")]",
                                                                     options:NSLayoutConstraint.FormatOptions(),
                                                                     metrics: nil,
                                                                     views: ["view":view]))
+        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[view(" + width.description + ")]",
+                                                                    options: NSLayoutConstraint.FormatOptions(),
+                                                                    metrics: nil,
+                                                                    views: ["view":view]))
+      
         containerView.layoutIfNeeded()
     }
 
