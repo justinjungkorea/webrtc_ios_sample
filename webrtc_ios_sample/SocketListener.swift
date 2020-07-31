@@ -48,30 +48,56 @@ class SocketListener: NSObject {
                     self.roomId = getValue(inputData: data, key: "roomId")!
                 }
                 else if eventOp == "SDP"{
-                    var sdp = getValue(inputData: data, key: "sdp")!
+                    let sdp = getValue(inputData: data, key: "sdp")!
                     if !sdp.isEmpty {
-                        let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
-                        self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
-                            print("Remote Peer Remote Description set: " + error.debugDescription)
-                        })
-                        
-                        #if arch(arm64)
-                        let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
-                        #else
-                        let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
-                        #endif
-    
-                        let videoTrack = self.peersManager.remoteStream?.videoTracks[0]
-                        videoTrack?.add(renderer)
+                        let type: String = getSDPType(inputData: data)!
+                        print("check ::: type - \(type)")
+                        if type == "offer" {
+                            
+                        } else {
+                            print("check ::: answer")
+                            let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
+                            self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
+                                print("Remote Peer Remote Description set: " + error.debugDescription)
+                            })
+                            
+                            if (self.peersManager.remoteStream != nil) {
+                                print("check ::: 1:1")
+                            } else {
+                                print("check ::: janus")
+                            }
+//                            #if arch(arm64)
+//                            let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
+//                            #else
+//                            let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
+//                            #endif
+//
+//                            renderer.videoContentMode = .scaleAspectFit
+//                            let videoTrack = self.peersManager.remoteStream?.videoTracks[0]
+//                            videoTrack?.add(renderer)
+//
+//                            embedView(renderer, into: self.remoteView)
+                        }
                     }
                 }
                 else if eventOp == "SDPVideoRoom"{
-                    var sdp = getValue(inputData: data, key: "sdp")!
-                    if(!sdp.isEmpty){
-                        let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
-                        self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
-                            print("Remote Peer Remote Description set: " + error.debugDescription)
-                        })
+                    let sdp = getValue(inputData: data, key: "sdp")!
+                    if !sdp.isEmpty {
+                        let type: String = getSDPType(inputData: data)!
+                        print("check ::: type - \(type)")
+                        if type == "offer" {
+                            
+                        } else {
+                            print("check ::: answer")
+                            let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
+                            self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
+                                print("Remote Peer Remote Description set: " + error.debugDescription)
+                            })
+                            
+                            if (self.peersManager.remoteStream == nil) {
+                                print("check ::: janus")
+                            }
+                        }
                     }
                 }
                 
@@ -209,7 +235,12 @@ func getValue(inputData: Any, key: String) -> String? {
     } else {
         return result
     }
-   
+}
+
+func getSDPType(inputData: Any) -> String? {
+    let type = JSON(inputData)[0]["sdp"]["type"].stringValue
+    
+    return type
 }
 
 func getReqNo() -> String {
@@ -230,4 +261,23 @@ func getDate() -> String {
     let dateString = formatter.string(from: today)
 
     return dateString
+}
+
+func embedView(_ view: UIView, into containerView: UIView) {
+    containerView.addSubview(view)
+    view.translatesAutoresizingMaskIntoConstraints = false
+    let width = (containerView.frame.width)
+    let height = (containerView.frame.height)
+    print("## width: \(width), height: \(height)")
+    
+    containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[view(" + height.description + ")]",
+                                                                options:NSLayoutConstraint.FormatOptions(),
+                                                                metrics: nil,
+                                                                views: ["view":view]))
+    containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[view(" + width.description + ")]",
+                                                                options: NSLayoutConstraint.FormatOptions(),
+                                                                metrics: nil,
+                                                                views: ["view":view]))
+  
+    containerView.layoutIfNeeded()
 }
