@@ -13,7 +13,6 @@ import SocketIO
 
 class PeersManager: NSObject {
     var localPeer: RTCPeerConnection?
-    var remotePeer: RTCPeerConnection?
     var peerConnectionFactory: RTCPeerConnectionFactory?
     var connectionConstraints: RTCMediaConstraints?
     var socketListener: SocketListener?
@@ -22,10 +21,11 @@ class PeersManager: NSObject {
     var localAudioTrack: RTCAudioTrack?
     var peerConnection: RTCPeerConnection?
     var view: UIView!
-    var remoteStream: RTCMediaStream?
-    
+    var remoteStream: [RTCMediaStream]
+
     init(view: UIView){
         self.view = view
+        self.remoteStream = []
     }
     
     func setSocketAdapter(socketAdapter: SocketListener){
@@ -49,7 +49,7 @@ class PeersManager: NSObject {
     func createLocalPeerConnection(sdpConstraints: RTCMediaConstraints){
         let config = RTCConfiguration()
         config.bundlePolicy = .maxCompat
-        config.iceServers = [RTCIceServer(urlStrings: ["turn:13.125.217.175:46000"], username: "kpoint", credential: "kpoint01")]
+        config.iceServers = [RTCIceServer(urlStrings: ["turn:106.240.247.44:46000"], username: "kpoint", credential: "kpoint01")]
         config.rtcpMuxPolicy = .require
         
         localPeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
@@ -100,6 +100,7 @@ extension PeersManager: RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         if peerConnection == self.localPeer {
             print("local peerConnection did add stream", stream)
+            remoteStream.append(stream)
         }
     }
     
@@ -125,9 +126,7 @@ extension PeersManager: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         if peerConnection == self.localPeer {
-            
         } else {
-            
             print("NEW remote ice candidate")
         }
     }

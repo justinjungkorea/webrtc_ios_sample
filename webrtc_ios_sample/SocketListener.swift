@@ -53,30 +53,31 @@ class SocketListener: NSObject {
                         let type: String = getSDPType(inputData: data)!
                         print("check ::: type - \(type)")
                         if type == "offer" {
+//                            let videoTrack = self.peersManager.remoteStream?.videoTracks[0]
                             
                         } else {
                             print("check ::: answer")
                             let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
-                            self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
-                                print("Remote Peer Remote Description set: " + error.debugDescription)
-                            })
                             
-                            if (self.peersManager.remoteStream != nil) {
-                                print("check ::: 1:1")
-                            } else {
-                                print("check ::: janus")
-                            }
-//                            #if arch(arm64)
-//                            let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
-//                            #else
-//                            let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
-//                            #endif
-//
-//                            renderer.videoContentMode = .scaleAspectFit
-//                            let videoTrack = self.peersManager.remoteStream?.videoTracks[0]
-//                            videoTrack?.add(renderer)
-//
-//                            embedView(renderer, into: self.remoteView)
+                            self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {(error) in
+                                print("Remote Peer Remote Description set: " + error.debugDescription)
+                                if self.peersManager.remoteStream.count >= 0 {
+                                    print("remoteStreamCount:", self.peersManager.remoteStream.count)
+                                }
+                                DispatchQueue.main.async {
+                                    #if arch(arm64)
+                                    let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
+                                    renderer.videoContentMode = .scaleAspectFit
+                                    #else
+                                    let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
+                                    #endif
+                                    
+                                    let videoTrack = self.peersManager.remoteStream[0].videoTracks[0]
+
+                                    videoTrack.add(renderer)
+                                    embedView(renderer, into: self.remoteView)
+                                }
+                            })
                         }
                     }
                 }
