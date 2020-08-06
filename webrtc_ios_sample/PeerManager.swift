@@ -122,6 +122,11 @@ extension PeersManager: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
         print("peerConnection new gathering state: \(newState.rawValue)")
+        
+        
+        
+        
+        
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
