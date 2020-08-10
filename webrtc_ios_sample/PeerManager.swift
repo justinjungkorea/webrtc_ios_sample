@@ -68,6 +68,7 @@ class PeersManager: NSObject {
         config.rtcpMuxPolicy = .require
         
         localPeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
+        remotePeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
     }
     
     func createLocalOffer(mediaConstraints: RTCMediaConstraints){

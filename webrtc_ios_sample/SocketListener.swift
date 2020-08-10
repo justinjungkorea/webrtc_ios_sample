@@ -84,7 +84,23 @@ class SocketListener: NSObject {
 
                     let type: String = getSDPType(inputData: data)!
                     if type == "offer" {
-                        let sessionDescription = RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp as! String)
+                        let sessionDescriptionOffer = RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp as! String)
+                        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
+                        let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
+
+                        self.peersManager.remotePeer!.setRemoteDescription(sessionDescriptionOffer, completionHandler: {error in
+                           print("Remote Peer Remote Description set: " + error.debugDescription)
+                        })
+                        
+                        self.peersManager.remotePeer!.answer(for: sdpConstraints, completionHandler: { (sessionDescription, error) in
+                            self.peersManager.remotePeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
+                                print("Local Peer Session Description: \(error.debugDescription)")
+                            })
+                            
+                            
+                            self.sdpVideoAnswer(sdp: sessionDescription?.sdp)
+                        })
+                        
                        
                     } else {
                         let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp as! String)
@@ -187,6 +203,25 @@ class SocketListener: NSObject {
         
         let sample: [String: Any] = [
             "eventOp": "SDP",
+            "reqNo": getReqNo(),
+            "reqDate": getDate(),
+            "roomId": self.roomId,
+            "sdp": arrayToJSON(inputData: sdpSample),
+            "type": "cam"
+        ]
+        
+        let sendData = arrayToJSON(inputData: sample)
+        socket.emit("knowledgetalk", sendData as! SocketData)
+    }
+    
+    func sdpVideoAnswer(sdp: String?){
+        let sdpSample: [String: Any] = [
+            "type": "answer",
+            "sdp": sdp!
+        ]
+        
+        let sample: [String: Any] = [
+            "eventOp": "SDPVideoRoom",
             "reqNo": getReqNo(),
             "reqDate": getDate(),
             "roomId": self.roomId,
