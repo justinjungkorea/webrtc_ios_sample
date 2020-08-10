@@ -13,6 +13,8 @@ import SocketIO
 
 class PeersManager: NSObject {
     var localPeer: RTCPeerConnection?
+    var remotePeer: RTCPeerConnection?
+    
     var peerConnectionFactory: RTCPeerConnectionFactory?
     var connectionConstraints: RTCMediaConstraints?
     var socketListener: SocketListener?
@@ -49,7 +51,20 @@ class PeersManager: NSObject {
     func createLocalPeerConnection(sdpConstraints: RTCMediaConstraints){
         let config = RTCConfiguration()
         config.bundlePolicy = .maxCompat
-        config.iceServers = [RTCIceServer(urlStrings: ["turn:106.240.247.44:46000"], username: "kpoint", credential: "kpoint01")]
+        config.iceServers = [
+            RTCIceServer(
+                urlStrings: ["turn:13.125.217.175:46000"],
+                username: "kpoint",
+                credential: "kpoint01"),
+            RTCIceServer(
+                urlStrings: ["stun:13.125.217.175:46000"]),
+            RTCIceServer(
+                urlStrings: ["turn:106.240.247.44:46000"],
+                username: "kpoint",
+                credential: "kpoint01"),
+            RTCIceServer(
+                urlStrings: ["stun:106.240.247.44:46000"])
+        ]
         config.rtcpMuxPolicy = .require
         
         localPeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
@@ -132,13 +147,13 @@ extension PeersManager: RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         if peerConnection == self.localPeer {
             
-            let candidate: [String: Any] = [
-                "candidate": String(candidate.sdp),
-                "sdpMid": candidate.sdpMid,
-                "sdpMLineIndex": String(candidate.sdpMLineIndex)
-            ]
-            
-            self.socketListener?.candidate(candidate: candidate)
+//            let candidate: [String: Any] = [
+//                "candidate": String(candidate.sdp),
+//                "sdpMid": candidate.sdpMid,
+//                "sdpMLineIndex": String(candidate.sdpMLineIndex)
+//            ]
+//
+//            self.socketListener?.candidate(candidate: candidate)
             
         } else {
             print("NEW remote ice candidate")
