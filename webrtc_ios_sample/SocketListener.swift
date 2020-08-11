@@ -84,28 +84,30 @@ class SocketListener: NSObject {
 
                     let type: String = getSDPType(inputData: data)!
                     if type == "offer" {
+                        let pluginId = getValue(inputData: data, key: "pluginId")
                         let sessionDescriptionOffer = RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp as! String)
                         let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
                         let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
-
+                        
                         self.peersManager.remotePeer!.setRemoteDescription(sessionDescriptionOffer, completionHandler: {error in
-                           print("Remote Peer Remote Description set: " + error.debugDescription)
+                           print("Set Remote Session Description Error : \(error)")
                         })
                         
                         self.peersManager.remotePeer!.answer(for: sdpConstraints, completionHandler: { (sessionDescription, error) in
+                            print("Answer Description : \(sessionDescription)")
                             self.peersManager.remotePeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
-                                print("Local Peer Session Description: \(error.debugDescription)")
+                                print("Set Local Session Description Error : \(error)")
                             })
+                            self.sdpVideoAnswer(sdp: sessionDescription, pluginId: pluginId as! String)
                             
-                            
-                            self.sdpVideoAnswer(sdp: sessionDescription?.sdp)
                         })
                         
                        
-                    } else {
+                    } else if type == "answer" {
+                        print("dongwook check : \(type)")
                         let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp as! String)
                         self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
-                            print("Remote Peer Remote Description set: " + error.debugDescription)
+                            print("Remote Peer Session Description: " + error.debugDescription)
                         })
                         
                         if (self.peersManager.remoteStream == nil) {
@@ -214,10 +216,10 @@ class SocketListener: NSObject {
         socket.emit("knowledgetalk", sendData as! SocketData)
     }
     
-    func sdpVideoAnswer(sdp: String?){
+    func sdpVideoAnswer(sdp: RTCSessionDescription?, pluginId: String){
         let sdpSample: [String: Any] = [
             "type": "answer",
-            "sdp": sdp!
+            "sdp": sdp?.sdp
         ]
         
         let sample: [String: Any] = [
@@ -226,6 +228,7 @@ class SocketListener: NSObject {
             "reqDate": getDate(),
             "roomId": self.roomId,
             "sdp": arrayToJSON(inputData: sdpSample),
+            "pluginId" : pluginId,
             "type": "cam"
         ]
         
