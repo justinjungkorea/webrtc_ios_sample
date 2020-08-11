@@ -118,6 +118,11 @@ extension PeersManager: RTCPeerConnectionDelegate {
             print("local peerConnection did add stream", stream)
             remoteStream.append(stream)
         }
+
+        if peerConnection == self.remotePeer {
+            print("remote peerConnection did add stream", stream)
+            remoteStream.append(stream)
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {

@@ -7,11 +7,7 @@
 		<key>webrtc_ios_sample.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-<<<<<<< HEAD
-			<integer>0</integer>
-=======
 			<integer>4</integer>
->>>>>>> 88b165e9e8380c63402178df219a9baee49b86bf
 		</dict>
 	</dict>
 </dict>

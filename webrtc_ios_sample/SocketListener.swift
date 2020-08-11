@@ -36,9 +36,9 @@ class SocketListener: NSObject {
         socket = self.manager?.socket(forNamespace: "/SignalServer")
         
         socket.on("knowledgetalk"){data, ack in
-            print("receive ::: \(data)")
             let eventOp: String = getValue(inputData: data, key: "eventOp")! as! String
             let signalOp: String = getValue(inputData: data, key: "signalOp")! as! String
+            print("receive ::: \(eventOp)")
             
             if(!eventOp.isEmpty){
                 if eventOp == "Register" {
@@ -46,6 +46,8 @@ class SocketListener: NSObject {
                 }
                 else if eventOp == "RoomJoin" {
                     self.roomId = getValue(inputData: data, key: "roomId")! as! String
+                    print("roomId : \(self.roomId)")
+                    UIPasteboard.general.string = self.roomId;
                 }
                 else if eventOp == "SDP"{
                     let sdp = getValue(inputData: data, key: "sdp")!
@@ -90,11 +92,25 @@ class SocketListener: NSObject {
                         let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
                         
                         self.peersManager.remotePeer!.setRemoteDescription(sessionDescriptionOffer, completionHandler: {error in
-                           print("Set Remote Session Description Error : \(error)")
+                            print("Set Remote Session Description Error : \(error)")
+                            
+//                            DispatchQueue.main.async {
+//                                #if arch(arm64)
+//                                let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
+//                                renderer.videoContentMode = .scaleAspectFit
+//                                #else
+//                                let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
+//                                #endif
+//
+//                                let videoTrack = self.peersManager.remoteStream[0].videoTracks[0]
+//
+//                                videoTrack.add(renderer)
+//                                embedView(renderer, into: self.remoteView)
+//                            }
+                
                         })
                         
                         self.peersManager.remotePeer!.answer(for: sdpConstraints, completionHandler: { (sessionDescription, error) in
-                            print("Answer Description : \(sessionDescription)")
                             self.peersManager.remotePeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
                                 print("Set Local Session Description Error : \(error)")
                             })
@@ -265,7 +281,6 @@ class SocketListener: NSObject {
         
         
         let sendData = arrayToJSON(inputData: sample)
-        print("send ::: \(sendData)")
         socket.emit("knowledgetalk", sendData as! SocketData)
     }
     
@@ -281,7 +296,6 @@ class SocketListener: NSObject {
         ]
 
         let sendData = arrayToJSON(inputData: sample)
-        print("send ::: \(sendData)")
         socket.emit("knowledgetalk", sendData as! SocketData)
     }
 
