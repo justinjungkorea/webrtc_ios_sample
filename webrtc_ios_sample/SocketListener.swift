@@ -21,7 +21,6 @@ class SocketListener: NSObject {
     var peersManager: PeersManager
     var remoteView: UIView!
     var id = 0
-    var a = 1
     
     init(peersManager: PeersManager, remoteView: UIView) {
         
