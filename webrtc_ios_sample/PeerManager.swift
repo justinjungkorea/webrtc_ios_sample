@@ -41,7 +41,7 @@ class PeersManager: NSObject {
         
         let constraints = [
             "OfferToReceiveAudio": "true",
-            "OfferToReceiveVideo": "true"
+            "OfferToReceiveVideo": "false"
         ]
         
         let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: constraints, optionalConstraints: nil)
@@ -67,8 +67,8 @@ class PeersManager: NSObject {
         ]
         config.rtcpMuxPolicy = .require
         
-        localPeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
         remotePeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
+        localPeer = peerConnectionFactory!.peerConnection(with: config, constraints: sdpConstraints, delegate: nil)
     }
     
     func createLocalOffer(mediaConstraints: RTCMediaConstraints){
@@ -114,9 +114,10 @@ extension PeersManager: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
+        print("event ::: \(stream) / \(peerConnection)")
         if peerConnection == self.localPeer {
             print("local peerConnection did add stream", stream)
-            remoteStream.append(stream)
+//            remoteStream.append(stream)
         }
 
         if peerConnection == self.remotePeer {

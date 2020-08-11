@@ -38,7 +38,9 @@ class SocketListener: NSObject {
         socket.on("knowledgetalk"){data, ack in
             let eventOp: String = getValue(inputData: data, key: "eventOp")! as! String
             let signalOp: String = getValue(inputData: data, key: "signalOp")! as! String
-            print("receive ::: \(eventOp)")
+            if eventOp != "SDPVideoRoom" {
+                print("receive ::: \(data)")
+            }
             
             if(!eventOp.isEmpty){
                 if eventOp == "Register" {
@@ -88,25 +90,28 @@ class SocketListener: NSObject {
                     if type == "offer" {
                         let pluginId = getValue(inputData: data, key: "pluginId")
                         let sessionDescriptionOffer = RTCSessionDescription(type: RTCSdpType.offer, sdp: sdp as! String)
-                        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"]
+                        let mandatoryConstraints = ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "false"]
                         let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
                         
                         self.peersManager.remotePeer!.setRemoteDescription(sessionDescriptionOffer, completionHandler: {error in
                             print("Set Remote Session Description Error : \(error)")
                             
-//                            DispatchQueue.main.async {
-//                                #if arch(arm64)
-//                                let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
-//                                renderer.videoContentMode = .scaleAspectFit
-//                                #else
-//                                let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
-//                                #endif
-//
-//                                let videoTrack = self.peersManager.remoteStream[0].videoTracks[0]
-//
-//                                videoTrack.add(renderer)
-//                                embedView(renderer, into: self.remoteView)
-//                            }
+                            if self.peersManager.remoteStream.count >= 0 {
+                                print("RemoteStream Count:", self.peersManager.remoteStream.count)
+                            }
+                            
+                            DispatchQueue.main.async {
+                                #if arch(arm64)
+                                let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
+                                renderer.videoContentMode = .scaleAspectFit
+                                #else
+                                let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
+                                #endif
+                                let videoTrack = self.peersManager.remoteStream[0].videoTracks[0]
+
+                                videoTrack.add(renderer)
+                                embedView(renderer, into: self.remoteView)
+                            }
                 
                         })
                         
@@ -114,7 +119,10 @@ class SocketListener: NSObject {
                             self.peersManager.remotePeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
                                 print("Set Local Session Description Error : \(error)")
                             })
-                            self.sdpVideoAnswer(sdp: sessionDescription, pluginId: pluginId as! Int)
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5){
+                                self.sdpVideoAnswer(sdp: sessionDescription, pluginId: pluginId as! Int)
+                            }
                             
                         })
                         
@@ -364,12 +372,13 @@ func getDate() -> String {
 }
 
 func embedView(_ view: UIView, into containerView: UIView) {
+    print("check2222")
     containerView.addSubview(view)
     view.translatesAutoresizingMaskIntoConstraints = false
     let width = (containerView.frame.width)
     let height = (containerView.frame.height)
     print("## width: \(width), height: \(height)")
-    
+    view.backgroundColor = .cyan
     containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[view(" + height.description + ")]",
                                                                 options:NSLayoutConstraint.FormatOptions(),
                                                                 metrics: nil,

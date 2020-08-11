@@ -155,6 +155,7 @@ class ViewController: UIViewController {
 
         self.peersManager!.localPeer!.add(stream)
         self.peersManager!.localPeer!.delegate = self.peersManager!
+        self.peersManager!.remotePeer!.delegate = self.peersManager!
     }
     
     func embedView(_ view: UIView, into containerView: UIView) {
