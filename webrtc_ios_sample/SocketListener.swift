@@ -51,12 +51,10 @@ class SocketListener: NSObject {
                     let sdp = getValue(inputData: data, key: "sdp")!
                     if !sdp.isEmpty {
                         let type: String = getSDPType(inputData: data)!
-                        print("check ::: type - \(type)")
                         if type == "offer" {
 //                            let videoTrack = self.peersManager.remoteStream?.videoTracks[0]
                             
                         } else {
-                            print("check ::: answer")
                             let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
                             
                             self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {(error) in
@@ -85,11 +83,9 @@ class SocketListener: NSObject {
                     let sdp = getValue(inputData: data, key: "sdp")!
                     if !sdp.isEmpty {
                         let type: String = getSDPType(inputData: data)!
-                        print("check ::: type - \(type)")
                         if type == "offer" {
                             
                         } else {
-                            print("check ::: answer")
                             let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp)
                             self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
                                 print("Remote Peer Remote Description set: " + error.debugDescription)
@@ -100,6 +96,10 @@ class SocketListener: NSObject {
                             }
                         }
                     }
+                }
+                else if eventOp == "Candidate"{
+                    let iceCandidate = RTCIceCandidate(sdp: JSON(data)[0]["candidate"]["candidate"].stringValue, sdpMLineIndex: JSON(data)[0]["candidate"]["sdpMLineIndex"].int32!, sdpMid: JSON(data)[0]["candidate"]["sdpMid"].stringValue)
+                    self.peersManager.localPeer?.add(iceCandidate)
                 }
                 
             }
@@ -206,6 +206,21 @@ class SocketListener: NSObject {
         ]
         
         let sendData = arrayToJSON(inputData: sample)
+        socket.emit("knowledgetalk", sendData as! SocketData)
+    }
+    
+    func candidate(candidate: [String: Any]){
+        let sample: [String: Any] = [
+            "eventOp": "Candidate",
+            "reqNo": getReqNo(),
+            "reqDate": getDate(),
+            "candidate": arrayToJSON(inputData: candidate),
+            "roomId": self.roomId
+        ]
+        
+        
+        let sendData = arrayToJSON(inputData: sample)
+        print("send ::: \(sendData)")
         socket.emit("knowledgetalk", sendData as! SocketData)
     }
 

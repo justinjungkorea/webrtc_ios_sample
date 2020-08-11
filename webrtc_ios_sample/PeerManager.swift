@@ -122,10 +122,24 @@ extension PeersManager: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
         print("peerConnection new gathering state: \(newState.rawValue)")
+        
+        
+        
+        
+        
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         if peerConnection == self.localPeer {
+            
+            let candidate: [String: Any] = [
+                "candidate": String(candidate.sdp),
+                "sdpMid": candidate.sdpMid,
+                "sdpMLineIndex": String(candidate.sdpMLineIndex)
+            ]
+            
+            self.socketListener?.candidate(candidate: candidate)
+            
         } else {
             print("NEW remote ice candidate")
         }
