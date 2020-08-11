@@ -98,13 +98,12 @@ class SocketListener: NSObject {
                             self.peersManager.remotePeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
                                 print("Set Local Session Description Error : \(error)")
                             })
-                            self.sdpVideoAnswer(sdp: sessionDescription, pluginId: pluginId as! String)
+                            self.sdpVideoAnswer(sdp: sessionDescription, pluginId: pluginId as! Int)
                             
                         })
                         
                        
                     } else if type == "answer" {
-                        print("dongwook check : \(type)")
                         let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp as! String)
                         self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
                             print("Remote Peer Session Description: " + error.debugDescription)
@@ -216,7 +215,7 @@ class SocketListener: NSObject {
         socket.emit("knowledgetalk", sendData as! SocketData)
     }
     
-    func sdpVideoAnswer(sdp: RTCSessionDescription?, pluginId: String){
+    func sdpVideoAnswer(sdp: RTCSessionDescription?, pluginId: Int){
         let sdpSample: [String: Any] = [
             "type": "answer",
             "sdp": sdp?.sdp
@@ -309,6 +308,10 @@ func getValue(inputData: Any, key: String) -> Any? {
     
     if(key == "feeds"){
         return JSON(inputData)[0][key].arrayValue
+    }
+    
+    if(key == "pluginId"){
+        return JSON(inputData)[0][key].intValue
     }
     
     let jsonData = JSON(inputData)[0]
