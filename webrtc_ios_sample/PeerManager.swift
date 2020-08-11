@@ -116,12 +116,8 @@ extension PeersManager: RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         print("event ::: \(stream) / \(peerConnection)")
         if peerConnection == self.localPeer {
-            print("local peerConnection did add stream", stream)
-//            remoteStream.append(stream)
-        }
-
-        if peerConnection == self.remotePeer {
-            print("remote peerConnection did add stream", stream)
+            remoteStream.append(stream)
+        }else if peerConnection == self.remotePeer {
             remoteStream.append(stream)
         }
     }
@@ -144,10 +140,6 @@ extension PeersManager: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
         print("peerConnection new gathering state: \(newState.rawValue)")
-        
-        
-        
-        
         
     }
     

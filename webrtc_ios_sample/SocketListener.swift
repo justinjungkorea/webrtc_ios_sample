@@ -22,6 +22,7 @@ class SocketListener: NSObject {
     var remoteView: UIView!
     var id = 0
     
+    
     init(peersManager: PeersManager, remoteView: UIView) {
         
         self.manager = SocketManager(socketURL: URL(string: "https://106.240.247.44:7605")!, config: [.log(false), .forceWebsockets(true), .secure(true), .selfSigned(true)])
@@ -94,35 +95,38 @@ class SocketListener: NSObject {
                         let sdpConstraints = RTCMediaConstraints(mandatoryConstraints: mandatoryConstraints, optionalConstraints: nil)
                         
                         self.peersManager.remotePeer!.setRemoteDescription(sessionDescriptionOffer, completionHandler: {error in
-                            print("Set Remote Session Description Error : \(error)")
+                            print("Set Remote Session Description Error : \(error.debugDescription)")
                             
                             if self.peersManager.remoteStream.count >= 0 {
-                                print("RemoteStream Count:", self.peersManager.remoteStream.count)
+                                  print("remoteStreamCount:", self.peersManager.remoteStream.count)
                             }
-                            
-                            DispatchQueue.main.async {
-                                #if arch(arm64)
-                                let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
-                                renderer.videoContentMode = .scaleAspectFit
-                                #else
-                                let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
-                                #endif
-                                let videoTrack = self.peersManager.remoteStream[0].videoTracks[0]
+                              DispatchQueue.main.async {
 
-                                videoTrack.add(renderer)
-                                embedView(renderer, into: self.remoteView)
-                            }
-                
+                                  #if arch(arm64)
+                                  let renderer = RTCMTLVideoView(frame: self.remoteView.frame)
+                                  renderer.videoContentMode = .scaleAspectFit
+                                  #else
+                                  let renderer = RTCEAGLVideoView(frame: self.remoteView.frame)
+                                  #endif
+
+                                  let videoTrack = self.peersManager.remoteStream[0].videoTracks[0]
+                                  videoTrack.add(renderer)
+                                  embedView(renderer, into: self.remoteView)
+
+                              }
                         })
                         
                         self.peersManager.remotePeer!.answer(for: sdpConstraints, completionHandler: { (sessionDescription, error) in
-                            self.peersManager.remotePeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
-                                print("Set Local Session Description Error : \(error)")
-                            })
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5){
+                            print("Answer Description : \(sessionDescription!)")
+                        self.peersManager.remotePeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
+                            print("Set Local Session Description Error : \(error.debugDescription)")
+                        })
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                                 self.sdpVideoAnswer(sdp: sessionDescription, pluginId: pluginId as! Int)
                             }
+                        
+                            
+                        
                             
                         })
                         
@@ -130,7 +134,8 @@ class SocketListener: NSObject {
                     } else if type == "answer" {
                         let sessionDescription = RTCSessionDescription(type: RTCSdpType.answer, sdp: sdp as! String)
                         self.peersManager.localPeer?.setRemoteDescription(sessionDescription, completionHandler: {error in
-                            print("Remote Peer Session Description: " + error.debugDescription)
+                        print("Remote Peer Session Description: " + error.debugDescription)
+                            
                         })
                         
                         if (self.peersManager.remoteStream == nil) {
@@ -145,8 +150,8 @@ class SocketListener: NSObject {
                 }
                 else if eventOp == "ReceiveFeed"{
                     let publisher = Array(arrayLiteral: getValue(inputData: data, key: "feeds"));
-                    let feedId = getValue(inputData: publisher.first, key: "id")
-                    let display = getValue(inputData: publisher.first, key: "display")
+                    let feedId = getValue(inputData: publisher.first!!, key: "id")
+                    let display = getValue(inputData: publisher.first!!, key: "display")
                     self.receiveFeeds(feedId: feedId as! String, display: display as! String)
                     
                 }
