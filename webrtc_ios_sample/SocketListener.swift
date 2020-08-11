@@ -97,9 +97,7 @@ class SocketListener: NSObject {
                         self.peersManager.remotePeer!.setRemoteDescription(sessionDescriptionOffer, completionHandler: {error in
                             print("Set Remote Session Description Error : \(error.debugDescription)")
                             
-                            if self.peersManager.remoteStream.count >= 0 {
-                                  print("remoteStreamCount:", self.peersManager.remoteStream.count)
-                            }
+                            
                               DispatchQueue.main.async {
 
                                   #if arch(arm64)
@@ -117,16 +115,16 @@ class SocketListener: NSObject {
                         })
                         
                         self.peersManager.remotePeer!.answer(for: sdpConstraints, completionHandler: { (sessionDescription, error) in
-                            print("Answer Description : \(sessionDescription!)")
+//                            print("Answer Description : \(sessionDescription!)")
                         self.peersManager.remotePeer!.setLocalDescription(sessionDescription!, completionHandler: {(error) in
                             print("Set Local Session Description Error : \(error.debugDescription)")
                         })
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                self.sdpVideoAnswer(sdp: sessionDescription, pluginId: pluginId as! Int)
-                            }
-                        
                             
-                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)){
+                            print("555555")
+                            self.sdpVideoAnswer(sdp: sessionDescription, pluginId: pluginId as! Int)
+                            print("666666")
+                        }
                             
                         })
                         
